@@ -24,7 +24,7 @@ function Form(props) {
     addEntry(poo, pee)
       .then((res) => {
         props.handleSuccess(true);
-        props.setLP(res.data.dateTimeId);
+        props.setLP(res.data);
         setPee(false);
         setPoo(false);
       })

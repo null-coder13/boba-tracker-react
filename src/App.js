@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import NavBar from "./NavBar";
 import Form from "./Form";
-import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
 import Alert from "@mui/material/Alert";
-import { getLastEntry, deleteLastEntry } from "./services/httpService";
+import {
+  getLastEntry,
+  deleteLastEntry,
+  getLastPoo,
+} from "./services/httpService";
 
 function App() {
   const [success, setSuccess] = useState(false);
@@ -28,17 +29,51 @@ function App() {
       minutes = date.getMinutes();
     }
 
-    return `${date.getHours()}:${minutes} on ${ date.getMonth() + 1 }/${date.getUTCDate()}`;
+    return `${date.getHours()}:${minutes} on ${
+      date.getMonth() + 1
+    }/${date.getUTCDate()}`;
+  }
+
+  function convertPooTime(dateTime) {
+    const date = new Date(Date.parse(dateTime));
+
+    let minutes;
+    if (date.getMinutes() < 10) {
+      minutes = "0" + date.getMinutes();
+    } else {
+      minutes = date.getMinutes();
+    }
+
+    return `${date.getHours()}:${minutes}`;
   }
 
   function setLP() {
-    getLastEntry().then((res) => {
-      setLastPotty(convertDateTime(res.data.dateTimeId));
-    });
+    let potty;
+    getLastEntry()
+      .then((res) => {
+        potty = convertDateTime(res.data.dateTimeId);
+      })
+      .then((res) => {
+        getLastPoo().then((res) => {
+          console.log(potty);
+          console.log(res.data);
+          potty += " || Last Poo: " + convertPooTime(res.data);
+          setLastPotty(potty);
+        });
+      });
   }
 
   function setLPNonRequest(newEntry) {
-    setLastPotty(convertDateTime(newEntry));
+    let potty;
+    if (newEntry.hasPooped) {
+      potty = convertDateTime(newEntry.dateTimeId);
+      potty += " || Last Poo: " + convertPooTime(newEntry.dateTimeId);
+    } else {
+      //get the last potty
+      const lastPooTime = lastPotty.split("||");
+      console.log(lastPooTime);
+    }
+    setLastPotty(potty);
   }
 
   function deleteEntry() {

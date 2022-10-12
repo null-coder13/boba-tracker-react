@@ -10,6 +10,10 @@ export function getLastEntry() {
   return axios.get(`${apiEndpoint}/GetLastEntry`);
 }
 
+export function getLastPoo() {
+  return axios.get(`${apiEndpoint}/GetLastPoo`);
+}
+
 export function deleteLastEntry() {
   return axios.delete(`${apiEndpoint}/DeleteLastEntry`);
 }

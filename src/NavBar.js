@@ -16,7 +16,7 @@ const NavBar = (props) => {
         <AppBar position="static">
           <Toolbar sx={{ justifyContent: "space-between" }}>
             <Typography variant="h6" color="inherit" component="div">
-              Last Potty: {props.lastPotty}
+              Last Potty: {props.lastPotty} 
             </Typography>
             <div />
             <Button
